@@ -8,7 +8,16 @@ const dotenv = require('dotenv')
 const userRoute = require('./Routes/users')
 const authRoute = require('./Routes/auth')
 const postRoute = require('./Routes/posts')
+const cors=require("cors");
 dotenv.config();
+
+const corsOptions ={
+    origin:'*', 
+    credentials:true,            //access-control-allow-credentials:true
+    optionSuccessStatus:200,
+ }
+
+ app.use(cors(corsOptions))
 
 const dbConnect = async () =>{
 

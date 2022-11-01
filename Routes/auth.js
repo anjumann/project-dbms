@@ -43,14 +43,20 @@ router.post('/login', async (req, res) => {
 
     try {
         const user = await User.findOne({ usn: req.body.usn })
-        !user && res.status(404).json("user not found");
+        const validate = await bcrypt.compare(req.body.password, user.password);
 
         // const validate = await (req.body.password === user.password)
-        const validate = await bcrypt.compare(req.body.password, user.password);
-        !validate && res.status(404).json("Wrong password")
+        if (!user) {
+            res.status(404).json("user not found");
+        } else if (!validate) {
+            res.status(404).json("Wrong password")
+        }
+        else {
+            const { password, ...others } = user._doc;
+            res.status(200).json(others);
 
-        const { password, ...others } = user._doc;
-        res.status(200).json(others);
+        }
+
 
     } catch (error) {
         console.log("Error is " + error);

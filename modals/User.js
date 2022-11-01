@@ -30,25 +30,32 @@ const UserSchema = new mongoose.Schema({
     },
     branch:{
         type:String,
+        default:''
     },
     semester: {
-        type: String
+        type: String,
+        default:''
+
     },
     section: {
-        type: String
+        type: String,
+        default:''
     },
     profilepic:{
         type:String,
         default:""
     },
     instagram: {
-        type: String
+        type: String,
+        default:''
     },
     github: {
-        type: String
+        type: String,
+        default:''
     },
     linkedin: {
-        type: String
+        type: String,
+        default:''
     }
 },
     { timestamps: true }
