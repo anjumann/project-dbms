@@ -8,7 +8,6 @@ const register = async (req, res) => {
         if (duplicate) {
             res.status(200).json("User already exists")
         } else {
-
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(req.body.password, salt);
             const uuid = await uuidv4();

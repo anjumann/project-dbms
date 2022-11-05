@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 const Verfication = new mongoose.Schema({
 
-    userusn: {
+    usn: {
         type: String,
         required: true
     },
