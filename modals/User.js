@@ -45,6 +45,15 @@ const UserSchema = new mongoose.Schema({
         type:String,
         default:""
     },
+    followers: {
+        type: Array,
+        default: []
+    },
+    following: {
+        type: Array,
+        default: []
+    },
+    
     instagram: {
         type: String,
         default:''
@@ -57,6 +66,7 @@ const UserSchema = new mongoose.Schema({
         type: String,
         default:''
     }
+
 },
     { timestamps: true }
 )
