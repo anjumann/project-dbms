@@ -42,7 +42,7 @@ app.use('/verify',verificationRoute)
 
 app.get('/', (req, res)=>{
     console.log('hello');
-    res.status(200).json('✅')
+    res.status(200).json('live')
 } )
 
 dbConnect().then(()=>{
