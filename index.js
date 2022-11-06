@@ -8,6 +8,7 @@ const dotenv = require('dotenv')
 const userRoute = require('./Routes/users')
 const authRoute = require('./Routes/auth')
 const postRoute = require('./Routes/posts')
+const verificationRoute = require('./Routes/valid')
 const cors=require("cors");
 dotenv.config();
 
@@ -37,6 +38,7 @@ app.use(morgan('common'));
 app.use('/user',userRoute)
 app.use('/auth',authRoute)
 app.use('/post',postRoute)
+app.use('/verify',verificationRoute)
 
 app.get('/', (req, res)=>{
     console.log('hello');
