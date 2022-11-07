@@ -3,22 +3,26 @@ const otpGenerator = require('otp-generator');
 const nodemailer = require("nodemailer");
 const dotenv = require('dotenv').config();
 
-const generateMail = async (otp,usn) => {
+const generateMail = async (otp, name) => {
 
-    let htmlText = `<div style="font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
-    <div style="margin:50px auto;width:70%;padding:20px 0">
-        <div style="border-bottom:1px solid #eee">
-            <a href="" style="font-size:1.4em;color: #00466a;text-decoration:none;font-weight:600">D-Social</a>
+    let htmlText = `
+        <div style="font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
+            <div style="margin:50px auto;width:70%;padding:20px 0">
+                <div style="border-bottom:1px solid #eee">
+                    <a href="" style="font-size:1.4em;color: #00466a;text-decoration:none;font-weight:600">StudentDB</a>
+                </div>
+                <p style="font-size:1.1em">Hi, ${name} </p>
+                <p>Thank you for registering for our NMAMIT Site. Use the following OTP to complete your Sign Up procedure.
+                </p>
+                <h2 
+                    style="background: #00466a;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;">
+                    ${otp}</h2>
+    
+                <p style="font-size:0.9em;">Regards,<br />StudentDB</p>
+                <hr style="border:none;border-top:1px solid #eee" />
+            </div>
         </div>
-        <p style="font-size:1.1em">Hi, ${usn} </p>
-        <p>Thank you for registering for our NMAMIT Site. Use the following OTP to complete your Sign Up procedure.</p>
-        <h2
-            style="background: #00466a;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;">
-            ${otp}</h2>
-        <p style="font-size:0.9em;">Regards,<br />D-Social</p>
-        <hr style="border:none;border-top:1px solid #eee" />
-    </div>
-</div>`
+    `
 
     let transporter = nodemailer.createTransport({
         host: 'smtp.sendgrid.net',
@@ -33,7 +37,7 @@ const generateMail = async (otp,usn) => {
         from: 'studentdb23@gmail.com',
         to: 'anjumanraj2@gmail.com',
         subject: 'OTP for StudentDB',
-        html: `<h1>OTP for verification is ${otp}</h1>`
+        html: htmlText
     };
 
     transporter.sendMail(mailOptions, function (error, info) {
@@ -51,7 +55,6 @@ const getOTP = async (req, res) => {
     const otpset = await new Verification({
         otp: otp,
         email: req.body.email,
-        verified: req.body.verified,
         name: req.body.name,
         usn: req.body.usn
     })
@@ -63,11 +66,11 @@ const getOTP = async (req, res) => {
             if (data == null) {
                 otpset.save();
                 // res.status(200).send(otpset);
-                await generateMail(otp,usn)
+                await generateMail(otp, req.body.name)
                 res.status(200).json("OTP sent successfully");
             }
             else {
-                await generateMail(otp)
+                await generateMail(otp, req.body.name)
                 await Verification.findOneAndUpdate({ email: req.body.email }, {
                     $set: { otp: otp }
                 })
