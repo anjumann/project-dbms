@@ -3,7 +3,7 @@ const otpGenerator = require('otp-generator');
 const nodemailer = require("nodemailer");
 const dotenv = require('dotenv').config();
 
-const generateMail = async (otp, name, email) => {
+const generateMail = async (otp, name) => {
 
     let htmlText = `
         <div style="font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
@@ -24,7 +24,7 @@ const generateMail = async (otp, name, email) => {
         </div>
     `
 
-    let transporter = nodemailer.createTransport({
+    let transporter = await nodemailer.createTransport({
         host: 'smtp.sendgrid.net',
         port: 587,
         auth: {
@@ -33,16 +33,16 @@ const generateMail = async (otp, name, email) => {
         },
     });
 
-    var mailOptions = {
+    var mailOptions = await {
         from: 'studentdb23@gmail.com',
         to: email,
         subject: 'OTP for StudentDB',
         html: htmlText
     };
 
-    transporter.sendMail(mailOptions, function (error, info) {
+    await transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
-            console.log(error);
+            console.log("Error: "+error);
         } else {
             console.log('Email sent: ' + info.response);
         }
@@ -74,7 +74,7 @@ const getOTP = async (req, res) => {
                 })
                 res.status(200).json("OTP sent successfully");
             }
-            await generateMail(otp, req.body.name, req.body.email)
+            await generateMail(otp, req.body.name)
         })
     }
     catch (e) {
