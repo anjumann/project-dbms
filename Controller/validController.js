@@ -26,7 +26,7 @@ const generateMail = async (otp, name) => {
 
     let transporter = await nodemailer.createTransport({
         host: 'smtp.sendgrid.net',
-        port: 587,
+        port: process.env.PORT_SENDGRID,
         auth: {
             user: 'apikey', // generated ethereal user
             pass: process.env.SENDGRID_API_KEY, // generated ethereal password
