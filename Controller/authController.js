@@ -4,8 +4,9 @@ const bcrypt = require('bcrypt');
 
 const register = async (req, res) => {
     try {
-        const duplicate = await User.findOne({ email: req.body.email })
-        if (duplicate) {
+        const duplicate = await User.findOne({ email: req.body.email  })
+        const duplicateusn = await User.findOne({ usn: req.body.usn  })
+        if (duplicate || duplicateusn) {
             res.status(200).json("User already exists")
         } else {
             const salt = await bcrypt.genSalt(10);

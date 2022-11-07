@@ -3,7 +3,7 @@ const otpGenerator = require('otp-generator');
 const nodemailer = require("nodemailer");
 const dotenv = require('dotenv').config();
 
-const generateMail = async (otp, name) => {
+const generateMail = async (otp, name, email) => {
 
     let htmlText = `
         <div style="font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
@@ -35,7 +35,7 @@ const generateMail = async (otp, name) => {
 
     var mailOptions = {
         from: 'studentdb23@gmail.com',
-        to: 'anjumanraj2@gmail.com',
+        to: email,
         subject: 'OTP for StudentDB',
         html: htmlText
     };
@@ -63,19 +63,18 @@ const getOTP = async (req, res) => {
 
         Verification.findOne({ email: req.body.email }, async (err, data) => {
 
-            if (data == null) {
+            if (!data) {
                 otpset.save();
                 // res.status(200).send(otpset);
-                await generateMail(otp, req.body.name)
                 res.status(200).json("OTP sent successfully");
             }
             else {
-                await generateMail(otp, req.body.name)
                 await Verification.findOneAndUpdate({ email: req.body.email }, {
                     $set: { otp: otp }
                 })
                 res.status(200).json("OTP sent successfully");
             }
+            await generateMail(otp, req.body.name, req.body.email)
         })
     }
     catch (e) {
@@ -91,7 +90,7 @@ const verifyOTP = async (req, res) => {
             if (data === null) {
 
                 res.status(404).json("OTP/User not found")
-                console.log("Error-> " + error);
+                console.log("Error-> " + err);
             } else {
                 const otp = req.body.otp
                 if (data.otp === otp) {
