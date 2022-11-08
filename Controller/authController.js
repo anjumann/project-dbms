@@ -1,11 +1,12 @@
 const User = require('../modals/User')
+const Verification = require('../modals/Verification')
 const { v4: uuidv4 } = require('uuid');
 const bcrypt = require('bcrypt');
 
 const register = async (req, res) => {
     try {
-        const duplicate = await User.findOne({ email: req.body.email  })
-        const duplicateusn = await User.findOne({ usn: req.body.usn  })
+        const duplicate = await User.findOne({ email: req.body.email })
+        const duplicateusn = await User.findOne({ usn: req.body.usn })
         if (duplicate || duplicateusn) {
             res.status(200).json("User already exists")
         } else {
@@ -26,7 +27,10 @@ const register = async (req, res) => {
                 github: req.body.github,
                 linkedin: req.body.linkedin
             })
-
+            
+            await Verification.findOneAndUpdate({ email: req.body.email }, {
+                $set: { verified: true }
+            })
             const user = await newUser.save()
             res.status(200).json(user)
         }
@@ -65,4 +69,4 @@ const login = async (req, res) => {
 
 }
 
-module.exports = {register, login}
+module.exports = { register, login }

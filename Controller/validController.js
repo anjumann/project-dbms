@@ -3,7 +3,7 @@ const otpGenerator = require('otp-generator');
 const nodemailer = require("nodemailer");
 const dotenv = require('dotenv').config();
 
-const generateMail = async (otp, name,email) => {
+const generateMail = async (otp, name, email) => {
 
     let htmlText = `
         <div style="font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
@@ -42,7 +42,7 @@ const generateMail = async (otp, name,email) => {
 
     await transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
-            console.log("Error: "+error);
+            console.log("Error: " + error);
         } else {
             console.log('Email sent: ' + info.response);
         }
@@ -50,6 +50,7 @@ const generateMail = async (otp, name,email) => {
 }
 
 const getOTP = async (req, res) => {
+
     const otp = otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false });
 
     const otpset = await new Verification({
@@ -63,7 +64,24 @@ const getOTP = async (req, res) => {
 
         Verification.findOne({ email: req.body.email }, async (err, data) => {
 
-            if (!data) {
+            if (data) {
+                if (data.verified) {
+                    res.status(200).json("User already verified")
+                    return
+                } else {
+
+                    Verification.findOne({ usn: req.body.usn }, async (err, data) => {
+                        if (data) {
+
+                            if (data.verified) {
+                                res.status(200).json("User already verified")
+                            }
+                        }
+                    })
+
+                }
+            }
+            else if (!data) {
                 otpset.save();
                 // res.status(200).send(otpset);
                 res.status(200).json("OTP sent successfully");
@@ -74,7 +92,7 @@ const getOTP = async (req, res) => {
                 })
                 res.status(200).json("OTP sent successfully");
             }
-            await generateMail(otp, req.body.name,req.body.email)
+            await generateMail(otp, req.body.name, req.body.email)
         })
     }
     catch (e) {
@@ -94,6 +112,7 @@ const verifyOTP = async (req, res) => {
             } else {
                 const otp = req.body.otp
                 if (data.otp === otp) {
+
                     res.status(200).json("OTP verified")
                 } else {
                     res.status(200).json("OTP not verified")
