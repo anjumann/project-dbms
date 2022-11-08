@@ -3,7 +3,7 @@ const otpGenerator = require('otp-generator');
 const nodemailer = require("nodemailer");
 const dotenv = require('dotenv').config();
 
-const generateMail = async (otp, name) => {
+const generateMail = async (otp, name,email) => {
 
     let htmlText = `
         <div style="font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
@@ -74,7 +74,7 @@ const getOTP = async (req, res) => {
                 })
                 res.status(200).json("OTP sent successfully");
             }
-            await generateMail(otp, req.body.name)
+            await generateMail(otp, req.body.name,req.body.email)
         })
     }
     catch (e) {
