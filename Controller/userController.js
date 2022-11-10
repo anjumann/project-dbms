@@ -19,7 +19,7 @@ const getAll = async (req, res) => {
 const getByUsn = async (req, res) => {
 
     try {
-        const user = await User.findOne({ usn: req.params.usn })
+        const user = await User.findOne({ usn: req.params.usn.toLowerCase() })
         if (user) {
             const { password, uuid, createdAt, updatedAt, ...others } = user._doc
             res.status(200).json(others)

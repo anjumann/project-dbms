@@ -9,6 +9,7 @@ const userRoute = require('./Routes/users')
 const authRoute = require('./Routes/auth')
 const postRoute = require('./Routes/posts')
 const verificationRoute = require('./Routes/valid')
+const imagekitRoute = require('./Routes/imagekitUpload')
 const cors=require("cors");
 dotenv.config();
 
@@ -39,6 +40,7 @@ app.use('/user',userRoute)
 app.use('/auth',authRoute)
 app.use('/post',postRoute)
 app.use('/verify',verificationRoute)
+app.use('/imageauth',imagekitRoute)
 
 app.get('/', (req, res)=>{
     console.log('hello');

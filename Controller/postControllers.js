@@ -7,7 +7,7 @@ const createPost = async (req, res) => {
     const ppid = await uuidv4();
     const newPost = await new Post({
         ppid: ppid,
-        title: req.body.title,
+        name: req.body.name,
         desc: req.body.desc,
         userusn: req.body.userusn
     })

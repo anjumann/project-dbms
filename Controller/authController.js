@@ -12,13 +12,14 @@ const register = async (req, res) => {
         } else {
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(req.body.password, salt);
-            const uuid = await uuidv4();
-            const newUser = await new User({
+            const uuid = uuidv4();
+       
+            const newUser = new User({
                 uuid: uuid,
                 name: req.body.name,
-                email: req.body.email,
+                email: req.body.email.toLowerCase(),
                 password: hashedPassword,
-                usn: req.body.usn,
+                usn: req.body.usn.toLowerCase(),
                 isTeacher: req.body.isTeacher,
                 branch: req.body.branch,
                 semester: req.body.semester,
@@ -46,7 +47,8 @@ const register = async (req, res) => {
 const login = async (req, res) => {
 
     try {
-        const user = await User.findOne({ usn: req.body.usn })
+        
+        const user = await User.findOne({ usn: req.body.usn.toLowerCase() })
         const validate = await bcrypt.compare(req.body.password, user.password);
 
         // const validate = await (req.body.password === user.password)
