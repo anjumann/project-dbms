@@ -9,7 +9,8 @@ const createPost = async (req, res) => {
         ppid: ppid,
         name: req.body.name,
         desc: req.body.desc,
-        userusn: req.body.userusn
+        userusn: req.body.userusn,
+        image: req.body.image,
     })
     try {
         const savedPost = await newPost.save()

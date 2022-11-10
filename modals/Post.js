@@ -17,6 +17,9 @@ const PostSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    Image:{
+        type: String,
+    },
     likes: {
         type: Array,
         default: []
